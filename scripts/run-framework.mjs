@@ -21,3 +21,13 @@ const cli = new URL(managedLinux
 process.argv = [process.execPath, fileURLToPath(cli), command,
   ...(!managedLinux && command === "dev" ? ["--port", "5173"] : []), ...args];
 await import(cli.href);
+
+// Local Workers do not dispatch cron triggers. Keep retention cleanup running
+// while the local app is running, even when no browser is open.
+if (!managedLinux && command === "dev") {
+  setInterval(() => {
+    fetch('http://localhost:5173/api/workspace', {
+      headers: {Cookie: '__sites_local_auth=1'},
+    }).catch(error => console.error('Local retention cleanup failed', error));
+  }, 60_000).unref();
+}

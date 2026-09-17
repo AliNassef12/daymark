@@ -5,12 +5,14 @@ A personal task manager with durable lists, private notes/files, and optional Gm
 ## Included
 
 - Named General, Year, Month, Week and Day lists.
+- Mark existing lists as Important with the bookmark button. Marked lists also appear on the Important page; click again to unmark them.
 - Urgent, Must and Not Important priorities on lists and tasks.
 - Priority-first sorting. A list inherits the highest priority of its unfinished tasks when that is higher than its own priority. Deadlines break ties, then names.
 - Optional task/list deadlines entered and displayed in the browser timezone, stored as UTC milliseconds.
 - Automatic Done page when all tasks are checked. Empty lists remain active until explicitly completed.
 - Complete list checks all tasks; reopen list unchecks all tasks. Unchecking an individual task reopens its list. Nothing is automatically deleted.
 - Important items with text, a private file, or both. Editable text, titles and replacement files. Maximum 10 MB per file and 20,000 characters per note.
+- Recycle bin for lists (including their tasks), individual tasks, and Important notes/files. Restore within 30 days or permanently delete with confirmation. Separately deleted tasks remain in the bin when their list is restored.
 - ChatGPT sign-in (the final sign-in method selected for this project). Production identity comes from the Sites dispatcher; every data/file request checks ownership.
 - Responsive layout, keyboard dialogs, named controls and an optional WebMCP tool to stage a new list.
 
@@ -26,12 +28,16 @@ Install Node.js 22.13+ (Node 24 recommended) and npm. In this directory:
 npm ci
 npm run build
 node --import ./scripts/sites-env.mjs ./node_modules/wrangler/bin/wrangler.js d1 execute DB --local --config dist/server/wrangler.json --persist-to .wrangler/state --file drizzle/0000_reflective_flatman.sql
+node --import ./scripts/sites-env.mjs ./node_modules/wrangler/bin/wrangler.js d1 execute DB --local --config dist/server/wrangler.json --persist-to .wrangler/state --file drizzle/0001_strange_shatterstar.sql
+node --import ./scripts/sites-env.mjs ./node_modules/wrangler/bin/wrangler.js d1 execute DB --local --config dist/server/wrangler.json --persist-to .wrangler/state --file drizzle/0002_jazzy_fantastic_four.sql
 npm run dev
 ```
 
 Apply the initial migration only once to a fresh local database. Open the URL printed by the server (normally http://localhost:5173). Click Sign in with ChatGPT: local development intentionally uses a simulated test user, not a real account. This test identity is excluded from production builds. Do not expose the development server to the internet.
 
-The project has one migration. New database changes should generate new migrations with `npm run db:generate`; never rewrite already applied migrations.
+Apply each migration once, in order. Existing installations should apply only migrations they have not yet run: `0001_strange_shatterstar.sql` adds the recycle bin and `0002_jazzy_fantastic_four.sql` adds Important lists. New database changes should generate new migrations with `npm run db:generate`; never rewrite already applied migrations.
+
+Recycle-bin items expire 30 days after deletion and cannot be restored after expiry. Cleanup runs on workspace requests and every minute while `npm run dev` is running. The built Worker includes an hourly scheduled cleanup handler and cron configuration; the deployment host must support and install that trigger for cleanup while nobody visits. Physical deletion occurs on the next cleanup run and removes attached files as well as database rows. Cleanup retries failed file removals. A stopped local server resumes cleanup when started and accessed again. Deleting a list permanently also removes its tasks, including separately deleted tasks inside it. Replacing a note's file is still an edit, not a recoverable deletion.
 
 ## Hosted deployment
 
@@ -76,6 +82,7 @@ npx tsc --noEmit
 npm run build
 # Run while local dev preview is active; creates local fixture data only:
 node tests/api.mjs
+node tests/recycle.mjs
 # With the reminder Python dependencies installed:
 python -m unittest discover -s reminder-service -v
 ```
@@ -84,4 +91,4 @@ Integration checks cover authentication, spoofed headers, cross-origin request r
 
 ## Suggested next additions
 
-Recurring tasks would save the most time for routines. Other useful future improvements: search across Important notes and tasks, a calendar view, and a recoverable trash area if deletion is added. These are suggestions, not unfinished controls in the current website.
+Recurring tasks would save the most time for routines. Other useful future improvements: search across Important notes and tasks and a calendar view. These are suggestions, not unfinished controls in the current website.

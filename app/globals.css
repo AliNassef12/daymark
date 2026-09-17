@@ -3,3 +3,7 @@
 /* Keep the working surface comfortable in narrow panels as well as phones. */
 .stats{grid-template-columns:repeat(3,minmax(0,1fr))}.stat{min-width:0}.stat>div{min-width:0}.primary{white-space:nowrap}.card-title h2{overflow-wrap:anywhere;min-width:0}
 @media(max-width:800px){aside{position:static;width:auto;padding:18px}.brand{font-size:22px}.brand-mark{width:30px;height:30px}.nav-label,.sidebar-bottom{display:none}nav{display:flex;margin-top:18px;gap:4px}nav button{padding:10px;font-size:14px;gap:7px;flex:1}.app-main{margin:0;padding:0 18px 35px}.topbar{height:65px}.account span{display:none}.page-heading{margin:26px 0;align-items:flex-start}h1{font-size:28px}.page-heading .primary{padding:12px}.stats{gap:8px}.stat{padding:14px 10px;display:block}.stat-icon{display:none}.stat strong{font-size:23px}.stat span{font-size:13px}.tabs{gap:2px}.tabs button{padding:8px 10px}.form-row{grid-template-columns:1fr}.modal{padding:23px}.sort-label{display:none}}
+
+.danger{color:#b43c3c}.card-footer{flex-wrap:wrap}@media(max-width:800px){nav{flex-wrap:wrap}nav button{flex:1 1 40%;white-space:nowrap}}
+
+.list-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:12px}.list-heading .eyebrow{margin:0}.important-toggle{font-size:13px}.important-toggle[aria-pressed="true"]{color:#8a6014}
