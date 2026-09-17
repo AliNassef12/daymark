@@ -7,3 +7,5 @@
 .danger{color:#b43c3c}.card-footer{flex-wrap:wrap}@media(max-width:800px){nav{flex-wrap:wrap}nav button{flex:1 1 40%;white-space:nowrap}}
 
 .list-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:12px}.list-heading .eyebrow{margin:0}.important-toggle{font-size:13px}.important-toggle[aria-pressed="true"]{color:#8a6014}
+
+.deadline-warning{background:#fff7e6;border-color:#efcc81;color:#785016}.deadline-warning h2{display:flex;align-items:center;gap:8px;font-size:18px}.deadline-warning p{margin:8px 0 12px}.deadline-warning ul{list-style:none;padding:0;margin:0;max-height:320px;overflow:auto}.deadline-warning li{display:flex;align-items:center;gap:16px;padding:12px 0;border-top:1px solid #efdcb6}.deadline-warning li>div:first-child{flex:1;min-width:0;overflow-wrap:anywhere}.warning-context,.warning-time span{display:block;font-size:12px;margin-top:4px}.warning-time{flex-shrink:0}.deadline-warning .secondary{flex-shrink:0}@media(max-width:640px){.deadline-warning li{flex-wrap:wrap}.warning-time{flex-shrink:1}.deadline-warning .secondary{padding:8px 12px}}

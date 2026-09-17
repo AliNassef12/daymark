@@ -9,6 +9,7 @@ A personal task manager with durable lists, private notes/files, and optional Gm
 - Urgent, Must and Not Important priorities on lists and tasks.
 - Priority-first sorting. A list inherits the highest priority of its unfinished tasks when that is higher than its own priority. Deadlines break ties, then names.
 - Optional task/list deadlines entered and displayed in the browser timezone, stored as UTC milliseconds.
+- On-site deadline warnings show unfinished lists and tasks within two hours of their deadlines, with time remaining and an Edit deadline button. They update every 15 seconds and on returning to the tab, retain overdue warnings, and work independently of email setup.
 - Automatic Done page when all tasks are checked. Empty lists remain active until explicitly completed.
 - Complete list checks all tasks; reopen list unchecks all tasks. Unchecking an individual task reopens its list. Nothing is automatically deleted.
 - Important items with text, a private file, or both. Editable text, titles and replacement files. Maximum 10 MB per file and 20,000 characters per note.
