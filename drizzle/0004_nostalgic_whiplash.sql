@@ -1,0 +1,1 @@
+ALTER TABLE `notes` ADD `important` integer DEFAULT 0 NOT NULL;

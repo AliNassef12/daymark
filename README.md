@@ -7,7 +7,7 @@ A personal task manager with durable lists, private notes/files, and optional Gm
 - Named General, Year, Month, Week and Day lists.
 - Mark existing lists as Important with the bookmark button. Marked lists also appear on the Important page; click again to unmark them.
 - Urgent, Must and Not Important priorities on lists and tasks.
-- Priority-first sorting. A list inherits the highest priority of its unfinished tasks when that is higher than its own priority. Deadlines break ties, then names.
+- Items marked Important sort first, followed by priority within each group. A list inherits the highest priority of its unfinished tasks when that is higher than its own priority. Deadlines break ties, then names.
 - Optional task/list deadlines entered and displayed in the browser timezone, stored as UTC milliseconds.
 - On-site deadline warnings show unfinished lists and tasks within two hours of their deadlines, with time remaining and an Edit deadline button. They update every 15 seconds and on returning to the tab, retain overdue warnings, and work independently of email setup.
 - Automatic Done page when all tasks are checked. Empty lists remain active until explicitly completed.
@@ -16,6 +16,8 @@ A personal task manager with durable lists, private notes/files, and optional Gm
 - Recycle bin for lists (including their tasks), individual tasks, and Important notes/files. Restore within 30 days or permanently delete with confirmation. Separately deleted tasks remain in the bin when their list is restored.
 - ChatGPT sign-in (the final sign-in method selected for this project). Production identity comes from the Sites dispatcher; every data/file request checks ownership.
 - Responsive layout, keyboard dialogs, named controls and an optional WebMCP tool to stage a new list.
+
+Named texts and snippets support a Text/Code selector. Code mode offers Dark, Light, and Monokai themes, a matching editor, and a live syntax preview for common strings, comments, keywords, and numbers. Each item remembers its type and theme. Copy content from its card or editor. Mark texts and code as Important to also show them on the Important page; unmarking keeps them in Texts & code. Existing notes default to Text.
 
 ## Stack
 
@@ -31,12 +33,14 @@ npm run build
 node --import ./scripts/sites-env.mjs ./node_modules/wrangler/bin/wrangler.js d1 execute DB --local --config dist/server/wrangler.json --persist-to .wrangler/state --file drizzle/0000_reflective_flatman.sql
 node --import ./scripts/sites-env.mjs ./node_modules/wrangler/bin/wrangler.js d1 execute DB --local --config dist/server/wrangler.json --persist-to .wrangler/state --file drizzle/0001_strange_shatterstar.sql
 node --import ./scripts/sites-env.mjs ./node_modules/wrangler/bin/wrangler.js d1 execute DB --local --config dist/server/wrangler.json --persist-to .wrangler/state --file drizzle/0002_jazzy_fantastic_four.sql
+node --import ./scripts/sites-env.mjs ./node_modules/wrangler/bin/wrangler.js d1 execute DB --local --config dist/server/wrangler.json --persist-to .wrangler/state --file drizzle/0003_slow_maximus.sql
+node --import ./scripts/sites-env.mjs ./node_modules/wrangler/bin/wrangler.js d1 execute DB --local --config dist/server/wrangler.json --persist-to .wrangler/state --file drizzle/0004_nostalgic_whiplash.sql
 npm run dev
 ```
 
 Apply the initial migration only once to a fresh local database. Open the URL printed by the server (normally http://localhost:5173). Click Sign in with ChatGPT: local development intentionally uses a simulated test user, not a real account. This test identity is excluded from production builds. Do not expose the development server to the internet.
 
-Apply each migration once, in order. Existing installations should apply only migrations they have not yet run: `0001_strange_shatterstar.sql` adds the recycle bin and `0002_jazzy_fantastic_four.sql` adds Important lists. New database changes should generate new migrations with `npm run db:generate`; never rewrite already applied migrations.
+Apply each migration once, in order. Existing installations should apply only migrations they have not yet run: `0001_strange_shatterstar.sql` adds the recycle bin and `0002_jazzy_fantastic_four.sql` adds Important lists. `0003_slow_maximus.sql` adds text/code types and saved themes. `0004_nostalgic_whiplash.sql` adds the Important flag for notes. New database changes should generate new migrations with `npm run db:generate`; never rewrite already applied migrations.
 
 Recycle-bin items expire 30 days after deletion and cannot be restored after expiry. Cleanup runs on workspace requests and every minute while `npm run dev` is running. The built Worker includes an hourly scheduled cleanup handler and cron configuration; the deployment host must support and install that trigger for cleanup while nobody visits. Physical deletion occurs on the next cleanup run and removes attached files as well as database rows. Cleanup retries failed file removals. A stopped local server resumes cleanup when started and accessed again. Deleting a list permanently also removes its tasks, including separately deleted tasks inside it. Replacing a note's file is still an edit, not a recoverable deletion.
 
